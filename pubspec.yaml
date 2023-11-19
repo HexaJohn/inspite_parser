@@ -1,0 +1,24 @@
+name: september_flutter
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.1.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+# Music: Farting Around by Kevin MacLeod
+# Free download: https://filmmusic.io/song/5152-farting-around
+# Licensed under CC BY 4.0: https://filmmusic.io/standard-license
+
