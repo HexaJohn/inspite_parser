@@ -20,9 +20,8 @@ abstract class AppInterface {
     Message('"Look around", "Start", "Listen for something"'),
     Message.newLine()
   ];
-  static final MainMenuModule _context = MainMenuModule();
   static StoryCrumb? _crumb;
-  static RoomDefinition currentRoom = MainMenuRoom();
+  static RoomDefinition currentRoom = MainMenuModule();
   static List<List<SoftToken>> hints = [];
 
   static void addMessage(Message? input) {
@@ -40,15 +39,15 @@ abstract class AppInterface {
     // Original input
     addMessage(input.toMessage());
     // Grammar tokens
-    addMessage(input.toTokens());
+    // addMessage(input.toTokens());
     // Token values
-    addMessage(input.toTokenValues());
+    // addMessage(input.toTokenValues());
     // distilled values
-    addMessage(input.toDistilled());
+    // addMessage(input.toDistilled());
     // distilled index
-    addMessage(input.toDistilledIndex());
+    // addMessage(input.toDistilledIndex());
     // persed response
-    addMessage(parsePlayerInput(input, _context));
+    addMessage(parsePlayerInput(input, currentRoom));
     // newline
     addMessage(Message.newLine());
   }
@@ -250,9 +249,9 @@ class TextInteraction {
 
   bool lookFor(List<SoftToken> tokenOrder) {
     Sentence sentence = Sentence.fromString(text);
-    print('looking for ${tokenOrder} in ${sentence.asTokenValues()}');
+    // print('looking for ${tokenOrder} in ${sentence.asTokenValues()}');
     for (var idea in sentence.ideas) {
-      print('idea match: ${_parseIdea(idea, tokenOrder)}');
+      // print('idea match: ${_parseIdea(idea, tokenOrder)}');
       if (!_parseIdea(idea, tokenOrder)) return false;
     }
     return true;
@@ -264,10 +263,10 @@ class TextInteraction {
 
     try {
       for (var token in tokenOrder) {
-        print('a: $a');
-        print('SOFTTOKEN: ${token.identifiers} == ${idea.distilled[a]}');
+        // print('a: $a');
+        // print('SOFTTOKEN: ${token.identifiers} == ${idea.distilled[a]}');
         if (token.contains(idea.distilled[a])) a++;
-        print('a: $a');
+        // print('a: $a');
         break;
       }
     } catch (e) {
@@ -298,9 +297,10 @@ mixin InteractableMixin {
 }
 
 class PointOfInterest with InteractableMixin {
-  PointOfInterest({this.hintText = 'An Entity', this.names = const ['thing']});
+  PointOfInterest({this.hintText = 'An Entity', this.names = const SoftToken(['thing']), this.name = ''});
   String hintText;
-  List<String> names;
+  String name;
+  SoftToken names;
   bool broken = false;
 
   @override
@@ -382,7 +382,7 @@ class PointOfInterest with InteractableMixin {
 
 abstract class RoomDefinition extends PointOfInterest {
   RoomDefinition();
-  List<PointOfInterest> locations = [];
+  abstract List<PointOfInterest> locations;
   String get title => 'Abstract Room';
   String get description => 'A room';
 }
@@ -412,32 +412,16 @@ class SoftToken {
   /// with the string representation of the object that [SoftToken] is
   /// initialized with.
   String get asHint {
-    print('asHint identifiers ${hashCode}: $identifiers');
-    print('asHint asHint ${hashCode}: ${identifiers.first}');
+    // print('asHint identifiers ${hashCode}: $identifiers');
+    // print('asHint asHint ${hashCode}: ${identifiers.first}');
     return identifiers.first;
   }
 
-  SoftToken(this.identifiers) {
-    final newIdentifiers = identifiers.map((e) => e.toUpperCase()).toList();
-    identifiers.replaceRange(0, identifiers.length, newIdentifiers);
-    // print('SoftToken: ${identifier.runtimeType}');
-    // identifiers = [];
-    // if (identifier is List<String>) {
-    // identifiers = identifier;
-    // print('SoftToken: $identifiers');
-    // print('SoftToken: $asHint initialized ${hashCode}');
-  }
-  // if (identifier is String) {
-  // identifiers = [identifier.toUpperCase()];
-  // }
-  // if (identifier is Object) {
-  // identifiers = [identifier.toString().toUpperCase()];
-  // } else {
-  // throw UnimplementedError('Unrecognized token type');
-  // }
-  // }
+  const SoftToken(this._identifiers);
 
-  final List<String> identifiers;
+  final List<String> _identifiers;
+
+  List<String> get identifiers => _identifiers.map((e) => e.toUpperCase()).toList();
 
   static SoftToken start() {
     return SoftToken(WeakThesarus.start);
@@ -445,6 +429,10 @@ class SoftToken {
 
   static SoftToken game() {
     return SoftToken(['game', 'videogame', 'adventure', 'playing']);
+  }
+
+  static SoftToken next() {
+    return SoftToken(['next', 'continue', 'go', 'forward']);
   }
 
   static SoftToken pants() {
