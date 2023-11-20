@@ -3,7 +3,10 @@ import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/mainland/rooms/entry1.dart';
 import 'package:september_flutter/src/story/rooms/room_701.dart';
 
-class MainMenuModule extends PointOfInterest {
+class MainMenuModule extends RoomDefinition {
+  @override
+  // TODO: implement locations
+  List<PointOfInterest> locations = [];
   @override
   Message? evaluateSpecial(TextInteraction input) {
     int index = 0;
