@@ -15,4 +15,12 @@ class Message {
   static Message newLine() {
     return Message('');
   }
+
+  static Message storytelling(String text) {
+    return Message('$text');
+  }
+
+  static Message? invisible() {
+    return Message('######');
+  }
 }
