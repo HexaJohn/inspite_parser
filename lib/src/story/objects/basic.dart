@@ -1,17 +1,26 @@
 import 'package:september_flutter/src/core/app.dart';
 
 class BasicSwitch extends PointOfInterest {
-  BasicSwitch({hintText = 'A switch of sorts', names = const ['switch', 'lights']});
+  BasicSwitch(
+      {super.hintText = 'A switch of sorts', super.names = const SoftToken(['switch', 'lights']), super.name = ''});
   bool state = false;
 }
 
 class BasicWindow extends PointOfInterest {
-  BasicWindow({hintText = 'Look outside!', names = const ['window', 'windows']});
+  BasicWindow(
+      {super.hintText = 'Look outside!', super.names = const SoftToken(['window', 'windows']), super.name = ''});
   bool open = true;
 }
 
 class BasicDoor extends PointOfInterest {
-  BasicDoor({hintText = 'Maybe I should knock?', names = const ['door', 'entrance']});
+  BasicDoor(
+      {super.hintText = 'Maybe I should knock?', super.names = const SoftToken(['door', 'entrance']), super.name = ''});
   bool open = false;
   bool locked = true;
+}
+
+class BasicScenery extends PointOfInterest {
+  BasicScenery(
+      {super.hintText = 'A switch of sorts', super.names = const SoftToken(['switch', 'lights']), super.name = ''});
+  bool state = false;
 }
