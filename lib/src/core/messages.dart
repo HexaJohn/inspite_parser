@@ -1,5 +1,5 @@
 class Message {
-  Message(this.value, {this.italic = true, this.owner = '', this.bold = false, this.fontSize});
+  Message(this.value, {this.italic = false, this.owner = '', this.bold = false, this.fontSize});
   String owner;
   String value;
   bool italic;
