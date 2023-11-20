@@ -1,7 +1,8 @@
 import 'package:september_flutter/src/core/app.dart';
 import 'package:september_flutter/src/core/messages.dart';
 
-class EmptyRoom extends RoomDefinition {
+class VoidRoom extends RoomDefinition {
+  @override
   List<PointOfInterest> locations = [];
 
   @override
@@ -16,7 +17,7 @@ class EmptyRoom extends RoomDefinition {
 
   @override
   Message? onDamage() {
-    return Message("I probably shouldn't break anything here", italic: true);
+    return onNothingHappened();
   }
 
   @override
@@ -31,44 +32,42 @@ class EmptyRoom extends RoomDefinition {
 
   @override
   Message? onListen() {
-    return Message("It's very quiet here", italic: true);
+    return onNothingHappened();
   }
 
   @override
   Message? onObserve() {
-    return Message('$title; $description', italic: true);
+    return onNothingHappened();
   }
 
   @override
   Message? onPickup() {
-    return Message('I cannot move an entire room', italic: true);
+    return onNothingHappened();
   }
 
   @override
   Message? onSmell() {
-    return Message('Dusty', italic: true);
+    return onNothingHappened();
   }
 
   @override
   Message? onTaste() {
-    return Message('I do not wish to lick the room', italic: true);
+    return onNothingHappened();
   }
 
   @override
   Message? onNothingHappened() {
-    return Message('Nothing happened', italic: true);
+    return null;
   }
 
   @override
   Message? onEnter() {
-    if (inside) return Message("I'm already in here", italic: true);
-
-    return null;
+    return onNothingHappened();
   }
 
   @override
   Message? onExit() {
-    return null;
+    return onNothingHappened();
   }
 
   @override
@@ -81,7 +80,7 @@ class EmptyRoom extends RoomDefinition {
     return false;
   }
 
+  String get subdefinitions => locations.map((e) => e.hintText).join(' ');
+
   bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
 }
-
-class TestRoom extends EmptyRoom {}
