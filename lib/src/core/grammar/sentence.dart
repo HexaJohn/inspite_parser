@@ -105,23 +105,29 @@ class Idea {
   /// not repeat words
   List<Token> get distilled {
     List<Token> list = [];
-    if (subject != null) list.add(Token.fromString('subject', subject!.index));
+    // if (subject != null) list.add(Token.fromString('subject', subject!.index));
+    if (subject != null) print('subject ${subject!}');
     if (subject != null) list.add(subject!);
-    if (subject != null) list.add(Token.fromString('${subject!.index}', subject!.index));
-    if (predicate != null) list.add(Token.fromString('predicate', predicate!.index));
+    // if (subject != null) list.add(Token.fromString('${subject!.index}', subject!.index));
+    // if (predicate != null) list.add(Token.fromString('predicate', predicate!.index));
+    if (predicate != null) print('predicate ${predicate!}');
     if (predicate != null) list.add(predicate!);
-    if (predicate != null) list.add(Token.fromString('${predicate!.index}', predicate!.index));
-    if (indirectObject != null) list.add(Token.fromString('indirectObject', indirectObject!.index));
+    // if (predicate != null) list.add(Token.fromString('${predicate!.index}', predicate!.index));
+    // if (indirectObject != null) list.add(Token.fromString('indirectObject', indirectObject!.index));
+    if (indirectObject != null) print('indirectObject ${indirectObject!}');
     if (indirectObject != null) list.add(indirectObject!);
-    if (indirectObject != null) list.add(Token.fromString('${indirectObject!.index}', indirectObject!.index));
-    if (directObject != null) list.add(Token.fromString('directObject', directObject!.index));
+    // if (indirectObject != null) list.add(Token.fromString('${indirectObject!.index}', indirectObject!.index));
+    // if (directObject != null) list.add(Token.fromString('directObject', directObject!.index));
+    if (directObject != null) print('directObject ${directObject!}');
     if (directObject != null) list.add(directObject!);
-    if (directObject != null) list.add(Token.fromString('${directObject!.index}', directObject!.index));
-    if (subjectComplement != null) list.add(Token.fromString('subjectComplement', subjectComplement!.index));
+    // if (directObject != null) list.add(Token.fromString('${directObject!.index}', directObject!.index));
+    // if (subjectComplement != null) list.add(Token.fromString('subjectComplement', subjectComplement!.index));
+    if (subjectComplement != null) print('subjectComplement ${subjectComplement!}');
     if (subjectComplement != null) list.add(subjectComplement!);
-    if (subjectComplement != null) list.add(Token.fromString('${subjectComplement!.index}', subjectComplement!.index));
+    // if (subjectComplement != null) list.add(Token.fromString('${subjectComplement!.index}', subjectComplement!.index));
     list.addAll(unknown);
     list.sort((a, b) => a.index.compareTo(b.index));
+    if (tokens.singleOrNull != null && list.isEmpty) return tokens;
     // return list.toSet().toList();
     return list.toList();
   }
