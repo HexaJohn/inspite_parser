@@ -1,11 +1,10 @@
 import 'package:september_flutter/src/core/app.dart';
 import 'package:september_flutter/src/core/messages.dart';
+import 'package:september_flutter/src/mainland/rooms/cliff.dart';
 import 'package:september_flutter/src/story/objects/basic.dart';
-import 'package:september_flutter/src/story/rooms/empty.dart';
+import 'package:september_flutter/src/story/rooms/devoid.dart';
 
-class MLEntry1 extends EmptyRoom {
-  @override // TODO: implement locations
-  List<PointOfInterest> get locations => [BasicSwitch(), BasicWindow(), BasicDoor()];
+class MLEntry1 extends VoidRoom {
   @override
   String get title => 'September 4th, 1846';
   @override
@@ -14,57 +13,11 @@ class MLEntry1 extends EmptyRoom {
   bool lights = false;
 
   @override
-  Message? onActivate() {
-    return onNothingHappened();
-  }
-
-  @override
-  Message? onDamage() {
-    return Message("I'd rather not lose my security deposit", italic: true);
-  }
-
-  @override
-  Message? onDeactivate() {
-    return onNothingHappened();
-  }
-
-  @override
-  Message? onInteract() {
-    return Message('I can feel a light switch on the wall');
-  }
-
-  @override
-  Message? onListen() {
-    return Message(
-        "Wind is howling outside while rain beats down on the window. The constant noise is broken up by cracks of thunder and the groaning of distant machinery.");
-  }
-
-  @override
-  Message? onObserve() {
-    if (lights) {
-      return Message('$title; $description');
-    } else {
-      return Message("I can't see a thing with the lights off");
+  Message? evaluateSpecial(TextInteraction input) {
+    print('evaluating special for entry1');
+    if (input.lookFor([SoftToken.next()])) {
+      return onExit();
     }
-  }
-
-  @override
-  Message? onPickup() {
-    return null;
-  }
-
-  @override
-  Message? onSmell() {
-    return Message('I can smell coffee');
-  }
-
-  @override
-  Message? onTaste() {
-    return Message('Yuck! Tastes like chemicals.');
-  }
-
-  @override
-  Message? onNothingHappened() {
     return null;
   }
 
@@ -83,29 +36,20 @@ Alas, my strength wanes.
 '''));
 
     AppInterface.setHints([
-      [
-        SoftToken([
-          'continue',
-          'next',
-          'go',
-          'forward',
-        ])
-      ],
-      [
-        SoftToken.start(),
-        SoftToken.game(),
-      ]
+      [SoftToken.next()],
     ]);
     return null;
   }
 
   @override
+  Message? onNothingHappened() {
+    return Message('I must collect my thoughts');
+  }
+
+  @override
   Message? onExit() {
-    if (lights) {
-      return Message("I'm not done here yet");
-    } else {
-      return Message("How am I supposed to find the exit in the dark?");
-    }
+    AppInterface.changeContext(MLCliff());
+    return Message.invisible();
   }
 
   @override
