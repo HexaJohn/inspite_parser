@@ -24,7 +24,7 @@ class _TextScaffoldState extends State<TextScaffold> {
             Text(AppInterface.motd),
           ],
         ),
-        Material(elevation: 5, child: Text('At the ${AppInterface.currentRoom.title}')),
+        Material(elevation: 5, child: Text('${AppInterface.currentRoom.title}')),
         Expanded(
           child: ListView.builder(
             controller: scrollController,
@@ -57,19 +57,49 @@ class _TextScaffoldState extends State<TextScaffold> {
             elevation: 10,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: inputController,
-                decoration: const InputDecoration(hintText: 'Input'),
-                onSubmitted: (value) {
-                  inputController.text = '';
-                  inputNode.requestFocus();
-                  setState(() {
-                    AppInterface.submit(TextInteraction(value));
-                    scrollController.jumpTo(scrollController.position.maxScrollExtent);
-                  });
-                },
-                focusNode: inputNode,
-                autofocus: true,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: inputController,
+                    decoration: const InputDecoration(hintText: 'Input'),
+                    onSubmitted: (value) {
+                      inputController.text = '';
+                      inputNode.requestFocus();
+                      setState(() {
+                        AppInterface.submit(TextInteraction(value));
+                        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+                      });
+                    },
+                    onChanged: (value) => setState(() {}),
+                    focusNode: inputNode,
+                    autofocus: true,
+                  ),
+                  Builder(builder: (context) {
+                    try {
+                      final List<String> allHints =
+                          AppInterface.hints.map((e) => e.map((e) => e.asHint).join(' ')).toList();
+                      final List<String> filterHints = List.from(allHints);
+                      filterHints.retainWhere((element) => element.startsWith('${inputController.text.toUpperCase()}'));
+                      final String hints = filterHints.join(', ');
+                      // print(AppInterface.hints.first.first.identifiers);
+                      print('builder as hint: ${AppInterface.hints.first.first.asHint}');
+                      // final List<String> hints = AppInterface.hints
+                      //     .map((chains) => chains.map((token) => token.identifiers.first).join(' '))
+                      //     .toList();
+                      // final List<Text> widgets = List.from(hints.map((e) => Text(e)));
+                      // return Row(children: widgets);
+                      return Row(
+                        children: [
+                          Text(hints.toLowerCase()),
+                        ],
+                      );
+                    } catch (e) {
+                      return Row(
+                        children: [],
+                      );
+                    }
+                  })
+                ],
               ),
             ))
       ],
