@@ -81,13 +81,6 @@ class _TextScaffoldState extends State<TextScaffold> {
                       final List<String> filterHints = List.from(allHints);
                       filterHints.retainWhere((element) => element.startsWith('${inputController.text.toUpperCase()}'));
                       final String hints = filterHints.join(' | ');
-                      // print(AppInterface.hints.first.first.identifiers);
-                      print('builder as hint: ${AppInterface.hints.first.first.asHint}');
-                      // final List<String> hints = AppInterface.hints
-                      //     .map((chains) => chains.map((token) => token.identifiers.first).join(' '))
-                      //     .toList();
-                      // final List<Text> widgets = List.from(hints.map((e) => Text(e)));
-                      // return Row(children: widgets);
                       return Row(
                         children: [
                           Text(hints.toLowerCase()),
