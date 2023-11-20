@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:september_flutter/src/core/dictionary.dart';
 import 'package:september_flutter/src/core/grammar/sentence.dart';
@@ -21,26 +23,34 @@ abstract class AppInterface {
   static final MainMenuModule _context = MainMenuModule();
   static StoryCrumb? _crumb;
   static RoomDefinition currentRoom = MainMenuRoom();
+  static List<List<SoftToken>> hints = [];
 
-  static void addMessage(Message input) {
+  static void addMessage(Message? input) {
+    if (input == null) return;
+    if (input.value == '######') return;
+    if (input.value == '> DEBUG') {
+      print('debugger');
+      debugger();
+    }
     _currentContext.add(input);
+    // _currentContext.add(Message.newLine());
   }
 
   static void submit(TextInteraction input) {
     // Original input
-    _currentContext.add(input.toMessage());
+    addMessage(input.toMessage());
     // Grammar tokens
-    _currentContext.add(input.toTokens());
+    addMessage(input.toTokens());
     // Token values
-    _currentContext.add(input.toTokenValues());
+    addMessage(input.toTokenValues());
     // distilled values
-    _currentContext.add(input.toDistilled());
+    addMessage(input.toDistilled());
     // distilled index
-    _currentContext.add(input.toDistilledIndex());
+    addMessage(input.toDistilledIndex());
     // persed response
-    _currentContext.add(parsePlayerInput(input, _context));
+    addMessage(parsePlayerInput(input, _context));
     // newline
-    _currentContext.add(Message.newLine());
+    addMessage(Message.newLine());
   }
 
   static Message parsePlayerInput(TextInteraction input, PointOfInterest context) {
@@ -164,7 +174,12 @@ abstract class AppInterface {
 
     currentRoom = room;
     currentContext.clear();
-    addMessage(Message('${room.title}: ${room.description}', bold: true, italic: true));
+    // addMessage(Message('${room.title}: ${room.description}', bold: true, italic: true));
+    addMessage(room.onEnter());
+  }
+
+  static void setHints(List<List<SoftToken>> list) {
+    hints = list;
   }
 }
 
@@ -396,22 +411,33 @@ class SoftToken {
   /// Accepts a single String, a List of Strings, or will populate identifiers
   /// with the string representation of the object that [SoftToken] is
   /// initialized with.
-  SoftToken(dynamic identifier) {
-    identifiers = [];
-    if (identifier is List<String>) {
-      identifiers = identifier.map((e) => e.toUpperCase()).toList();
-    }
-    if (identifier is String) {
-      identifiers = [identifier.toUpperCase()];
-    }
-    if (identifier is Object) {
-      identifiers = [identifier.toString().toUpperCase()];
-    } else {
-      throw UnimplementedError('Unrecognized token type');
-    }
+  String get asHint {
+    print('asHint identifiers ${hashCode}: $identifiers');
+    print('asHint asHint ${hashCode}: ${identifiers.first}');
+    return identifiers.first;
   }
 
-  late List<String> identifiers;
+  SoftToken(this.identifiers) {
+    final newIdentifiers = identifiers.map((e) => e.toUpperCase()).toList();
+    identifiers.replaceRange(0, identifiers.length, newIdentifiers);
+    // print('SoftToken: ${identifier.runtimeType}');
+    // identifiers = [];
+    // if (identifier is List<String>) {
+    // identifiers = identifier;
+    // print('SoftToken: $identifiers');
+    // print('SoftToken: $asHint initialized ${hashCode}');
+  }
+  // if (identifier is String) {
+  // identifiers = [identifier.toUpperCase()];
+  // }
+  // if (identifier is Object) {
+  // identifiers = [identifier.toString().toUpperCase()];
+  // } else {
+  // throw UnimplementedError('Unrecognized token type');
+  // }
+  // }
+
+  final List<String> identifiers;
 
   static SoftToken start() {
     return SoftToken(WeakThesarus.start);
