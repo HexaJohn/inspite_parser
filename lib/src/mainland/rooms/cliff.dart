@@ -33,6 +33,11 @@ class MLCliff extends VoidRoom {
   bool turn = false;
   bool wait = false;
 
+  @override
+  Message? evaluate(TextInteraction input) {
+    return null;
+  }
+
   Message? evaluateSpecial(TextInteraction input) {
     if (input.lookFor([
           SoftToken(['turn'])

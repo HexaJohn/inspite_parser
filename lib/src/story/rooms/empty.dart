@@ -3,6 +3,10 @@ import 'package:september_flutter/src/core/messages.dart';
 
 class EmptyRoom extends RoomDefinition {
   List<PointOfInterest> locations = [];
+  @override
+  Message? evaluate(TextInteraction input) {
+    return null;
+  }
 
   @override
   String get title => 'Empty Room (Debug)';

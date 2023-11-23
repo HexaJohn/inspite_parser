@@ -6,6 +6,11 @@ class VoidRoom extends RoomDefinition {
   List<PointOfInterest> locations = [];
 
   @override
+  Message? evaluate(TextInteraction input) {
+    return null;
+  }
+
+  @override
   String get title => 'Empty Room (Debug)';
   @override
   String get description => 'An empty room devoid of features';

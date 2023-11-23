@@ -7,6 +7,12 @@ class MainMenuModule extends RoomDefinition {
   @override
   // TODO: implement locations
   List<PointOfInterest> locations = [];
+
+  @override
+  Message? evaluate(TextInteraction input) {
+    return null;
+  }
+
   @override
   Message? evaluateSpecial(TextInteraction input) {
     int index = 0;

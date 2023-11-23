@@ -8,6 +8,11 @@ class MainMenuRoom extends RoomDefinition {
   String get description => 'Start and quit the game';
 
   @override
+  Message? evaluate(TextInteraction input) {
+    return null;
+  }
+
+  @override
   Message? onActivate() {
     return onNothingHappened();
   }

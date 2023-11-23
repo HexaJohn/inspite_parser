@@ -56,6 +56,9 @@ abstract class AppInterface {
     String? funny = Keyword.funny[input.joined];
     if (funny != null) return Message(funny, owner: '', italic: true);
 
+    Message? simple = context.evaluate(input);
+    if (simple != null) return simple;
+
     Message? special = context.evaluateSpecial(input);
     if (special != null) return special;
 
@@ -279,6 +282,7 @@ class TextInteraction {
 }
 
 mixin InteractableMixin {
+  Message? evaluate(TextInteraction input);
   Message? evaluateSpecial(TextInteraction input);
   Message? onInteract();
   Message? onPickup();
@@ -296,12 +300,15 @@ mixin InteractableMixin {
   bool canExit();
 }
 
-class PointOfInterest with InteractableMixin {
+abstract class PointOfInterest with InteractableMixin {
   PointOfInterest({this.hintText = 'An Entity', this.names = const SoftToken(['thing']), this.name = ''});
   String hintText;
   String name;
   SoftToken names;
   bool broken = false;
+
+  @override
+  Message? evaluate(TextInteraction input);
 
   @override
   Message? evaluateSpecial(TextInteraction input) {
