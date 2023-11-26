@@ -21,25 +21,25 @@ class _TextScaffoldState extends State<TextScaffold> {
           children: [
             const Text('Alpha Build 0'),
             const Spacer(),
-            Text(AppInterface.motd),
+            Text(App.motd),
           ],
         ),
-        Material(elevation: 5, child: Text('${AppInterface.currentRoom.title}')),
+        Material(elevation: 5, child: Text('${App.currentRoom.title}')),
         Expanded(
           child: ListView.builder(
             controller: scrollController,
             itemBuilder: (context, index) {
-              if (AppInterface.currentContext.length == index) return const SizedBox(height: 60);
+              if (App.currentContext.length == index) return const SizedBox(height: 60);
               return Text(
-                AppInterface.currentContext[index].toString(),
+                App.currentContext[index].toString(),
                 style: TextStyle(
-                    fontSize: AppInterface.currentContext[index].fontSize,
-                    fontStyle: AppInterface.currentContext[index].italic ? FontStyle.italic : FontStyle.normal,
-                    fontWeight: AppInterface.currentContext[index].bold ? FontWeight.bold : FontWeight.normal),
+                    fontSize: App.currentContext[index].fontSize,
+                    fontStyle: App.currentContext[index].italic ? FontStyle.italic : FontStyle.normal,
+                    fontWeight: App.currentContext[index].bold ? FontWeight.bold : FontWeight.normal),
               );
 
               List<Widget> _ideas = [];
-              Sentence.fromString(AppInterface.currentContext[index].value).ideas.forEach((element) {
+              Sentence.fromString(App.currentContext[index].value).ideas.forEach((element) {
                 _ideas.add(Container(
                     color: Colors.white10,
                     padding: const EdgeInsets.all(4),
@@ -50,7 +50,7 @@ class _TextScaffoldState extends State<TextScaffold> {
                 children: _ideas,
               );
             },
-            itemCount: AppInterface.currentContext.length + 1,
+            itemCount: App.currentContext.length + 1,
           ),
         ),
         Material(
@@ -59,6 +59,31 @@ class _TextScaffoldState extends State<TextScaffold> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Builder(builder: (context) {
+                        try {
+                          return Container(
+                            child: AnalysisWidget('Analysis', App.playerInputs.last),
+                          );
+                        } catch (e) {
+                          return Container();
+                          // TODO
+                        }
+                      }),
+                      Builder(builder: (context) {
+                        try {
+                          return Container(
+                            child: AnalysisWidget('Analysis Comp.', App.playerInputs[App.playerInputs.length - 2]),
+                          );
+                        } catch (e) {
+                          return Container();
+                          // TODO
+                        }
+                      }),
+                    ],
+                  ),
                   TextField(
                     controller: inputController,
                     decoration: const InputDecoration(hintText: 'Input'),
@@ -66,7 +91,7 @@ class _TextScaffoldState extends State<TextScaffold> {
                       inputController.text = '';
                       inputNode.requestFocus();
                       setState(() {
-                        AppInterface.submit(TextInteraction(value));
+                        App.submit(TextInteraction(value));
                         scrollController.jumpTo(scrollController.position.maxScrollExtent);
                       });
                     },
@@ -76,8 +101,7 @@ class _TextScaffoldState extends State<TextScaffold> {
                   ),
                   Builder(builder: (context) {
                     try {
-                      final List<String> allHints =
-                          AppInterface.hints.map((e) => e.map((e) => e.asHint).join(' ')).toList();
+                      final List<String> allHints = App.hints.map((e) => e.map((e) => e.asHint).join(' ')).toList();
                       final List<String> filterHints = List.from(allHints);
                       filterHints.retainWhere((element) => element.startsWith('${inputController.text.toUpperCase()}'));
                       final String hints = filterHints.join(' | ');
@@ -95,6 +119,39 @@ class _TextScaffoldState extends State<TextScaffold> {
                 ],
               ),
             ))
+      ],
+    );
+  }
+}
+
+class AnalysisWidget extends StatelessWidget {
+  const AnalysisWidget(
+    this.title,
+    this.sentence, {
+    super.key,
+  });
+
+  final Sentence sentence;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(title),
+        Builder(builder: (_) {
+          final Idea current = sentence.ideas.first;
+          List<Text> children = [
+            Text('Direct Object: ${current.directObject}'),
+            Text('Indirect Object: ${current.indirectObject}'),
+            Text('Predicate: ${current.predicate}'),
+            Text('Subject: ${current.subject}'),
+            Text('Subject Compliment: ${current.subjectComplement}'),
+            // Text('Preposition: ${current.preposition}'),
+          ];
+
+          return Column(children: children);
+        })
       ],
     );
   }
