@@ -46,9 +46,9 @@ final List<String> refuseEntry = ["Would I even fit in there?", "I'm not going i
 final List<String> refuseExit = ["I'm definitely trapped in here", "I can't find a way out", "I can't escape"];
 
 Message get genericResponse {
-  return Message('I must collect my thoughts', owner: '', italic: true);
-  // _genericResponses.shuffle();
-  // return Message(_genericResponses.first, owner: '', italic: true);
+  // return Message('I must collect my thoughts', owner: '', italic: true);
+  _genericResponses.shuffle();
+  return Message(_genericResponses.first, owner: '', italic: true);
 }
 
 List<String> _genericResponses = [
