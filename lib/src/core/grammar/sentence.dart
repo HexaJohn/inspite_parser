@@ -55,8 +55,20 @@ class Idea {
   /// "[The man] builds [a house]"
   Token? get predicate {
     try {
-      return verbs.first;
+      String predicate = verbs.first.value;
+      int predicateIndex = verbs.first.index;
+      // print('got predicate: $predicate at $predicateIndex');
+      // print('possible preposition: ${tokens.elementAt(predicateIndex + 1).value}');
+      if (tokens.elementAt(predicateIndex).isPreposition) {
+        predicate += ' ${tokens.elementAt(predicateIndex).value}';
+        // print('predicate chain: $predicate');
+      }
+      return Token.fromString(predicate, predicateIndex);
+    } on StateError {
+      // print('something happened');
+      return null;
     } catch (e) {
+      print('something happened $e');
       return null;
     }
   }
@@ -65,7 +77,7 @@ class Idea {
   /// is usually a noun or pronoun.
   /// "[The man builds] a house", "[The man builds] it"
   Token? get directObject {
-    if (nouns.singleOrNull != null) return null;
+    if (nouns.singleOrNull != null) return nouns.single;
     try {
       return nouns.last;
     } catch (e) {
@@ -104,25 +116,26 @@ class Idea {
   /// Distilled should drop all words except the most important ones, and should
   /// not repeat words
   List<Token> get distilled {
+    bool debugPrint = false;
     List<Token> list = [];
     // if (subject != null) list.add(Token.fromString('subject', subject!.index));
-    if (subject != null) print('subject ${subject!}');
+    if (subject != null && debugPrint) print('subject ${subject!}');
     if (subject != null) list.add(subject!);
     // if (subject != null) list.add(Token.fromString('${subject!.index}', subject!.index));
     // if (predicate != null) list.add(Token.fromString('predicate', predicate!.index));
-    if (predicate != null) print('predicate ${predicate!}');
+    if (predicate != null && debugPrint) print('predicate ${predicate!}');
     if (predicate != null) list.add(predicate!);
     // if (predicate != null) list.add(Token.fromString('${predicate!.index}', predicate!.index));
     // if (indirectObject != null) list.add(Token.fromString('indirectObject', indirectObject!.index));
-    if (indirectObject != null) print('indirectObject ${indirectObject!}');
+    if (indirectObject != null && debugPrint) print('indirectObject ${indirectObject!}');
     if (indirectObject != null) list.add(indirectObject!);
     // if (indirectObject != null) list.add(Token.fromString('${indirectObject!.index}', indirectObject!.index));
     // if (directObject != null) list.add(Token.fromString('directObject', directObject!.index));
-    if (directObject != null) print('directObject ${directObject!}');
+    if (directObject != null && debugPrint) print('directObject ${directObject!}');
     if (directObject != null) list.add(directObject!);
     // if (directObject != null) list.add(Token.fromString('${directObject!.index}', directObject!.index));
     // if (subjectComplement != null) list.add(Token.fromString('subjectComplement', subjectComplement!.index));
-    if (subjectComplement != null) print('subjectComplement ${subjectComplement!}');
+    if (subjectComplement != null && debugPrint) print('subjectComplement ${subjectComplement!}');
     if (subjectComplement != null) list.add(subjectComplement!);
     // if (subjectComplement != null) list.add(Token.fromString('${subjectComplement!.index}', subjectComplement!.index));
     list.addAll(unknown);
