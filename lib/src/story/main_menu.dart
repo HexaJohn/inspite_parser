@@ -1,4 +1,5 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/grammar/token_soft.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/mainland/rooms/entry1.dart';
 import 'package:september_flutter/src/story/rooms/room_701.dart';
@@ -23,8 +24,8 @@ class MainMenuModule extends RoomDefinition {
       return _startMainland();
     }
 
-    if (AppInterface.crumb != null) {
-      if (AppInterface.crumb!.lookingFor.contains(input.raw.first)) {
+    if (App.crumb != null) {
+      if (App.crumb!.lookingFor.contains(input.raw.first)) {
         return _startDemo();
       }
     }
@@ -33,7 +34,7 @@ class MainMenuModule extends RoomDefinition {
       index++;
 
       if (input.raw.length < index + 1) {
-        AppInterface.setCrumb(StoryCrumb(['game', 'playing', 'adventure', 'story'], () {}));
+        App.setCrumb(StoryCrumb(['game', 'playing', 'adventure', 'story'], () {}));
         return Message('What do you want to ${input.segments.first}?', bold: true);
       } else {
         if (input.lookFor([
@@ -53,7 +54,7 @@ class MainMenuModule extends RoomDefinition {
 
   Message _startDemo() {
     // AppInterface.newGame();
-    AppInterface.changeContext(TutorialShipRoom());
+    App.changeContext(TutorialShipRoom());
     return Message(
         "You wake up in the dark. An unnatural orange glow from outside a window barely illuminates the room.",
         bold: true);
@@ -61,7 +62,7 @@ class MainMenuModule extends RoomDefinition {
 
   Message? _startMainland() {
     // AppInterface.newGame();
-    AppInterface.changeContext(MLEntry1());
+    App.changeContext(MLEntry1());
     return Message.invisible();
     // return Message(
     // '''The sea has rested for several days now, while the sea within me rages. The storm in my heart roars at the idea I alone survived this catastrophe.''',

@@ -85,7 +85,7 @@ class VoidRoom extends RoomDefinition {
     return false;
   }
 
-  String get subdefinitions => locations.map((e) => e.hintText).join(' ');
+  String get locationDescriptions => locations.map((e) => e.hintText).join(' ');
 
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 }

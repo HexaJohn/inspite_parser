@@ -85,7 +85,7 @@ class EmptyRoom extends RoomDefinition {
     return false;
   }
 
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 }
 
 class TestRoom extends EmptyRoom {}

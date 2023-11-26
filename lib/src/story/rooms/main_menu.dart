@@ -84,7 +84,7 @@ class MainMenuRoom extends RoomDefinition {
     return false;
   }
 
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 
   @override
   List<PointOfInterest> locations = [];

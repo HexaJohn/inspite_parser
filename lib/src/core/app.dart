@@ -1,25 +1,30 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:september_flutter/src/core/dictionary.dart';
 import 'package:september_flutter/src/core/grammar/sentence.dart';
 import 'package:september_flutter/src/core/grammar/token.dart';
+import 'package:september_flutter/src/core/grammar/token_soft.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/story/main_menu.dart';
 import 'package:september_flutter/src/story/rooms/main_menu.dart';
 
-abstract class AppInterface {
-  AppInterface();
+abstract class App {
+  App();
 
   static String get motd => 'hello';
   static List<Message> get currentContext => _currentContext;
+  static List<Sentence> get playerInputs => _inputs;
   static StoryCrumb? get crumb => _crumb;
+  static String get location => currentRoom.title;
   static final List<Message> _currentContext = [
     Message('Welcome'),
     Message('Type something to begin'),
     Message('"Look around", "Start", "Listen for something"'),
     Message.newLine()
   ];
+  static final List<Sentence> _inputs = [];
   static StoryCrumb? _crumb;
   static RoomDefinition currentRoom = MainMenuModule();
   static List<List<SoftToken>> hints = [];
@@ -38,6 +43,7 @@ abstract class AppInterface {
   static void submit(TextInteraction input) {
     // Original input
     addMessage(input.toMessage());
+    _inputs.add(input.toSentence());
     // Grammar tokens
     // addMessage(input.toTokens());
     // Token values
@@ -62,7 +68,7 @@ abstract class AppInterface {
     Message? special = context.evaluateSpecial(input);
     if (special != null) return special;
 
-    Message? action = _actionParse(input, AppInterface.currentRoom);
+    Message? action = _actionParse(input, App.currentRoom);
     if (action != null) return action;
 
     Message? generic = _genericParse(input, context);
@@ -183,6 +189,10 @@ abstract class AppInterface {
   static void setHints(List<List<SoftToken>> list) {
     hints = list;
   }
+
+  static void clearHints() {
+    hints.clear();
+  }
 }
 
 class TextInteraction {
@@ -220,6 +230,10 @@ class TextInteraction {
 
   get joined => cleanupSymbols(raw.join('-'));
 
+  Sentence toSentence() {
+    return Sentence.fromString(text);
+  }
+
   Message toMessage() {
     return Message('> $text', owner: '', italic: false, bold: true);
   }
@@ -241,6 +255,10 @@ class TextInteraction {
   Message toDistilled() {
     return Message('> ${Sentence.fromString(text).ideas.first.distilled}',
         owner: '', italic: false, bold: true, fontSize: 8);
+  }
+
+  List<Token> toDistilledTokens() {
+    return Sentence.fromString(text).ideas.first.distilled;
   }
 
   /// Developer tool
@@ -306,6 +324,7 @@ abstract class PointOfInterest with InteractableMixin {
   String name;
   SoftToken names;
   bool broken = false;
+  Map<SoftToken, Message? Function(TextInteraction)?> specialResponses = {};
 
   @override
   Message? evaluate(TextInteraction input);
@@ -390,6 +409,7 @@ abstract class PointOfInterest with InteractableMixin {
 abstract class RoomDefinition extends PointOfInterest {
   RoomDefinition();
   abstract List<PointOfInterest> locations;
+  String get identifier => 'room';
   String get title => 'Abstract Room';
   String get description => 'A room';
 }
@@ -412,60 +432,6 @@ class Keyword {
   static List<String> start = WeakThesarus.start;
   static List<String> article = WeakThesarus.article;
   static Map<String, String> funny = WeakThesarus.funny;
-}
-
-class SoftToken {
-  /// Accepts a single String, a List of Strings, or will populate identifiers
-  /// with the string representation of the object that [SoftToken] is
-  /// initialized with.
-  String get asHint {
-    // print('asHint identifiers ${hashCode}: $identifiers');
-    // print('asHint asHint ${hashCode}: ${identifiers.first}');
-    return identifiers.first;
-  }
-
-  const SoftToken(this._identifiers);
-
-  final List<String> _identifiers;
-
-  List<String> get identifiers => _identifiers.map((e) => e.toUpperCase()).toList();
-
-  static SoftToken start() {
-    return SoftToken(WeakThesarus.start);
-  }
-
-  static SoftToken game() {
-    return SoftToken(['game', 'videogame', 'adventure', 'playing']);
-  }
-
-  static SoftToken next() {
-    return SoftToken(['next', 'continue', 'go', 'forward']);
-  }
-
-  static SoftToken pants() {
-    return SoftToken(['pants', 'pantaloons', 'trousers']);
-  }
-
-  static SoftToken jacket() {
-    return SoftToken(['jacket', 'coat', 'parka']);
-  }
-
-  static SoftToken shoes() {
-    return SoftToken(['shoes', 'footwear', 'jays', 'sneakers', 'boots']);
-  }
-
-  static SoftToken spyglass() {
-    return SoftToken(['telescope', 'spyglass', 'glass']);
-  }
-
-  bool contains(Token element) {
-    return identifiers.contains(element.value);
-  }
-
-  @override
-  String toString() {
-    return identifiers.first;
-  }
 }
 
 class StoryCrumb {

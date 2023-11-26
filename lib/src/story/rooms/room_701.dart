@@ -95,5 +95,5 @@ class TutorialShipRoom extends EmptyRoom {
   }
 
   @override
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 }
