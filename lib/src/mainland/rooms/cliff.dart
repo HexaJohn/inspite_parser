@@ -1,5 +1,8 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/grammar/token_soft.dart';
 import 'package:september_flutter/src/core/messages.dart';
+import 'package:september_flutter/src/core/player.dart';
+import 'package:september_flutter/src/mainland/objects/common.dart';
 import 'package:september_flutter/src/story/objects/basic.dart';
 import 'package:september_flutter/src/story/rooms/devoid.dart';
 import 'package:september_flutter/src/story/rooms/empty.dart';
@@ -19,9 +22,11 @@ class MLCliff extends VoidRoom {
       cliffShip,
       handkerchiefSearch,
       saltwater,
-      spyglassSearch
+      spyglassSearch,
     ];
   }
+  @override
+  String get identifier => 'cliff';
   @override
   String get title => 'At the Edge of the Cliff';
   @override
@@ -35,6 +40,18 @@ class MLCliff extends VoidRoom {
 
   @override
   Message? evaluate(TextInteraction input) {
+    for (var element in locations) {
+      final eval = element.evaluate(input);
+      if (eval != null) {
+        return eval;
+      }
+    }
+    for (var element in Player.inventory) {
+      final eval = element.evaluate(input);
+      if (eval != null) {
+        return eval;
+      }
+    }
     return null;
   }
 
@@ -61,8 +78,9 @@ My eyes must deceive me...''');
   @override
   Message? onEnter() {
     // if (inside) return Message("I'm already here");
-
-    AppInterface.addMessage(Message.storytelling(subdefinitions));
+    App.clearHints();
+    App.addMessage(Message.storytelling(locationDescriptions));
+    Player.take(jacket);
 
     return null;
   }
@@ -88,7 +106,7 @@ My eyes must deceive me...''');
   }
 
   @override
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 }
 
 final BasicScenery cliffRocks = (BasicScenery(

@@ -1,4 +1,5 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/grammar/token_soft.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/mainland/rooms/cliff.dart';
 import 'package:september_flutter/src/story/objects/basic.dart';
@@ -23,9 +24,10 @@ class MLEntry1 extends VoidRoom {
 
   @override
   Message? onEnter() {
+    App.clearHints();
     // if (inside) return Message("I'm already here");
 
-    AppInterface.addMessage(Message.storytelling(
+    App.addMessage(Message.storytelling(
         '''The sea has rested for several days now, while the sea within me rages. The storm in my heart roars at the idea I alone survived this catastrophe.
 
 I spent quite some hours on deck staring along the horizon, blasted by the salt spray.
@@ -35,7 +37,7 @@ I have been well in light of the possibilities that surround me, although weak. 
 Alas, my strength wanes.
 '''));
 
-    AppInterface.setHints([
+    App.setHints([
       [SoftToken.next()],
     ]);
     return null;
@@ -48,7 +50,7 @@ Alas, my strength wanes.
 
   @override
   Message? onExit() {
-    AppInterface.changeContext(MLCliff());
+    App.changeContext(MLCliff());
     return Message.invisible();
   }
 
@@ -63,5 +65,5 @@ Alas, my strength wanes.
   }
 
   @override
-  bool get inside => AppInterface.currentRoom.runtimeType == runtimeType;
+  bool get inside => App.currentRoom.runtimeType == runtimeType;
 }
