@@ -67,6 +67,9 @@ class Idea {
     } on StateError {
       // print('something happened');
       return null;
+    } on RangeError {
+      // print('something happened');
+      return null;
     } catch (e) {
       print('something happened $e');
       return null;
