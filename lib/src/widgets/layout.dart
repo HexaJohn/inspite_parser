@@ -21,7 +21,7 @@ class _TextScaffoldState extends State<TextScaffold> {
           children: [
             const Text('Alpha Build 0'),
             const Spacer(),
-            Text(App.motd),
+            Text(App.location),
           ],
         ),
         Material(elevation: 5, child: Text('${App.currentRoom.title}')),
