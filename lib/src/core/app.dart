@@ -6,7 +6,16 @@ import 'package:september_flutter/src/core/dictionary.dart';
 import 'package:september_flutter/src/core/grammar/sentence.dart';
 import 'package:september_flutter/src/core/grammar/token.dart';
 import 'package:september_flutter/src/core/grammar/token_soft.dart';
+import 'package:september_flutter/src/core/interaction/enterable.dart';
+import 'package:september_flutter/src/core/interaction/functional.dart';
+import 'package:september_flutter/src/core/interaction/grabbable.dart';
+import 'package:september_flutter/src/core/interaction/interactable.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
+import 'package:september_flutter/src/core/interaction/sensible.dart';
+import 'package:september_flutter/src/core/interaction/washable.dart';
+import 'package:september_flutter/src/core/interaction/wearable.dart';
 import 'package:september_flutter/src/core/messages.dart';
+import 'package:september_flutter/src/core/player.dart';
 import 'package:september_flutter/src/story/main_menu.dart';
 import 'package:september_flutter/src/story/rooms/main_menu.dart';
 
@@ -14,10 +23,13 @@ abstract class App {
   App();
 
   static String get motd => 'hello';
+  static Map<String, Player> get players => _players;
+  static Map<String, Player> _players = {};
+  static Player get client => _players['client']!;
   static List<Message> get currentContext => _currentContext;
   static List<Sentence> get playerInputs => _inputs;
   static StoryCrumb? get crumb => _crumb;
-  static String get location => currentRoom.title;
+  static String get location => currentRoom.identifier;
   static final List<Message> _currentContext = [
     Message('Welcome'),
     Message('Type something to begin'),
@@ -58,7 +70,7 @@ abstract class App {
     addMessage(Message.newLine());
   }
 
-  static Message parsePlayerInput(TextInteraction input, PointOfInterest context) {
+  static Message parsePlayerInput(TextInteraction input, EntityInterface context) {
     String? funny = Keyword.funny[input.joined];
     if (funny != null) return Message(funny, owner: '', italic: true);
 
@@ -74,11 +86,11 @@ abstract class App {
     Message? generic = _genericParse(input, context);
     if (generic != null) return generic;
 
-    print('generic response');
+    print('generic response from ${context.name}');
     return genericResponse;
   }
 
-  static Message? _genericParse(TextInteraction input, PointOfInterest context) {
+  static Message? _genericParse(TextInteraction input, EntityInterface context) {
     if (Keyword.vulgar.any((element) => input.segments.contains(element))) {
       List<String> vulgarRes = ['Highly inappropriate', 'No', 'Gross'];
       vulgarRes.shuffle();
@@ -88,7 +100,7 @@ abstract class App {
     }
   }
 
-  static Message? _actionParse(TextInteraction input, PointOfInterest context) {
+  static Message? _actionParse(TextInteraction input, EntityInterface context) {
     if (WeakThesarus.interact.any((element) => input.segments.contains(element))) {
       genericAction.shuffle();
       Message? result = context.onInteract();
@@ -192,6 +204,10 @@ abstract class App {
 
   static void clearHints() {
     hints.clear();
+  }
+
+  static void addPlayer(String s) {
+    _players.putIfAbsent(s, () => Player(s));
   }
 }
 
@@ -299,116 +315,9 @@ class TextInteraction {
   }
 }
 
-mixin InteractableMixin {
-  Message? evaluate(TextInteraction input);
-  Message? evaluateSpecial(TextInteraction input);
-  Message? onInteract();
-  Message? onPickup();
-  Message? onActivate();
-  Message? onDeactivate();
-  Message? onDamage();
-  Message? onObserve();
-  Message? onTaste();
-  Message? onListen();
-  Message? onSmell();
-  Message? onNothingHappened();
-  Message? onEnter();
-  Message? onExit();
-  bool canEnter();
-  bool canExit();
-}
-
-abstract class PointOfInterest with InteractableMixin {
-  PointOfInterest({this.hintText = 'An Entity', this.names = const SoftToken(['thing']), this.name = ''});
-  String hintText;
-  String name;
-  SoftToken names;
-  bool broken = false;
-  Map<SoftToken, Message? Function(TextInteraction)?> specialResponses = {};
-
-  @override
-  Message? evaluate(TextInteraction input);
-
-  @override
-  Message? evaluateSpecial(TextInteraction input) {
-    // TODO: implement special
-    return null;
-  }
-
-  @override
-  bool canEnter() {
-    return false;
-  }
-
-  @override
-  bool canExit() {
-    return false;
-  }
-
-  @override
-  Message? onActivate() {
-    return null;
-  }
-
-  @override
-  Message? onDamage() {
-    return null;
-  }
-
-  @override
-  Message? onDeactivate() {
-    return null;
-  }
-
-  @override
-  Message? onEnter() {
-    return null;
-  }
-
-  @override
-  Message? onExit() {
-    return null;
-  }
-
-  @override
-  Message? onInteract() {
-    return null;
-  }
-
-  @override
-  Message? onListen() {
-    return null;
-  }
-
-  @override
-  Message? onNothingHappened() {
-    return null;
-  }
-
-  @override
-  Message? onObserve() {
-    return null;
-  }
-
-  @override
-  Message? onPickup() {
-    return null;
-  }
-
-  @override
-  Message? onSmell() {
-    return null;
-  }
-
-  @override
-  Message? onTaste() {
-    return null;
-  }
-}
-
-abstract class RoomDefinition extends PointOfInterest {
-  RoomDefinition();
-  abstract List<PointOfInterest> locations;
+abstract class RoomDefinition extends EntityInterface {
+  RoomDefinition({required super.name});
+  abstract List<EntityInterface> locations;
   String get identifier => 'room';
   String get title => 'Abstract Room';
   String get description => 'A room';
