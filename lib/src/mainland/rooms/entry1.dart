@@ -6,6 +6,10 @@ import 'package:september_flutter/src/story/objects/basic.dart';
 import 'package:september_flutter/src/story/rooms/devoid.dart';
 
 class MLEntry1 extends VoidRoom {
+  MLEntry1() {
+    super.name = 'entry1';
+    locations = [];
+  }
   @override
   String get title => 'September 4th, 1846';
   @override

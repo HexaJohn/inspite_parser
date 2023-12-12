@@ -1,8 +1,11 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
 import 'package:september_flutter/src/core/messages.dart';
 
 class EmptyRoom extends RoomDefinition {
-  List<PointOfInterest> locations = [];
+  List<EntityInterface> locations = [];
+
+  EmptyRoom({super.name = 'emptyRoom'});
   @override
   Message? evaluate(TextInteraction input) {
     return null;

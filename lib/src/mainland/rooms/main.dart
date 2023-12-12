@@ -1,9 +1,11 @@
 import 'package:september_flutter/src/core/app.dart';
 import 'package:september_flutter/src/core/grammar/token_soft.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/story/rooms/room_701.dart';
 
-class MLMain extends PointOfInterest {
+class MLMain extends EntityInterface {
+  MLMain({super.name = 'mainlandMainMenu'});
   // @override
   // Message? evaluateSpecial(TextInteraction input) {
   //   input.lookFor([SoftToken.start(), SoftToken.game()]);

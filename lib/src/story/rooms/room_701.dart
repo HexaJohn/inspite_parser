@@ -1,11 +1,12 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/story/objects/basic.dart';
 import 'package:september_flutter/src/story/rooms/empty.dart';
 
 class TutorialShipRoom extends EmptyRoom {
   @override // TODO: implement locations
-  List<PointOfInterest> get locations => [BasicSwitch(), BasicWindow(), BasicDoor()];
+  List<EntityInterface> get locations => [BasicSwitch(), BasicWindow(), BasicDoor()];
   @override
   String get title => 'Room 701';
   @override

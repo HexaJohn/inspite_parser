@@ -9,6 +9,7 @@ import 'package:september_flutter/src/story/rooms/empty.dart';
 
 class MLCliff extends VoidRoom {
   MLCliff() {
+    super.name = 'cliff';
     locations = [
       cliffRocks,
       cliffOcean,
@@ -46,7 +47,7 @@ class MLCliff extends VoidRoom {
         return eval;
       }
     }
-    for (var element in Player.inventory) {
+    for (var element in App.client.inventory) {
       final eval = element.evaluate(input);
       if (eval != null) {
         return eval;
@@ -80,7 +81,7 @@ My eyes must deceive me...''');
     // if (inside) return Message("I'm already here");
     App.clearHints();
     App.addMessage(Message.storytelling(locationDescriptions));
-    Player.take(jacket);
+    Client.take(jacket);
 
     return null;
   }

@@ -1,5 +1,6 @@
 import 'package:september_flutter/src/core/app.dart';
 import 'package:september_flutter/src/core/grammar/token_soft.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
 import 'package:september_flutter/src/core/messages.dart';
 import 'package:september_flutter/src/mainland/rooms/entry1.dart';
 import 'package:september_flutter/src/story/rooms/room_701.dart';
@@ -7,7 +8,9 @@ import 'package:september_flutter/src/story/rooms/room_701.dart';
 class MainMenuModule extends RoomDefinition {
   @override
   // TODO: implement locations
-  List<PointOfInterest> locations = [];
+  List<EntityInterface> locations = [];
+
+  MainMenuModule({super.name = 'mainMenuModule'});
 
   @override
   Message? evaluate(TextInteraction input) {

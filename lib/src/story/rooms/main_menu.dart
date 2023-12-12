@@ -1,7 +1,10 @@
 import 'package:september_flutter/src/core/app.dart';
+import 'package:september_flutter/src/core/interaction/interface.dart';
 import 'package:september_flutter/src/core/messages.dart';
 
 class MainMenuRoom extends RoomDefinition {
+  MainMenuRoom({super.name = 'mainMenuRoom'});
+
   @override
   String get title => 'Main Menu';
   @override
@@ -87,5 +90,5 @@ class MainMenuRoom extends RoomDefinition {
   bool get inside => App.currentRoom.runtimeType == runtimeType;
 
   @override
-  List<PointOfInterest> locations = [];
+  List<EntityInterface> locations = [];
 }
